@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<blockchain>
+  <block>
+    <index>[index: null]</index>
+    <previousHash>0</previousHash>
+    <transaction>[B@6193b845</transaction>
+    <hash>999127460</hash>
+  </block>
+</blockchain>
