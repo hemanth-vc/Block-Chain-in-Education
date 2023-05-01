@@ -14,13 +14,9 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import javax.xml.parsers.*;
-import org.w3c.dom.*;
-import java.io.*;
-import javax.xml.parsers.*;
-import org.w3c.dom.*;
 import java.io.*;
 
+//defines the block of a blockchain
 public class Block {
     private int index;
     private int previousHash;
@@ -40,7 +36,7 @@ public class Block {
         };
         this.hash = Arrays.hashCode(content);
         if (index != 0) {
-            // addXMLNode(index, 0, transactionHash, hash);
+            addXMLNode(index, previousHash, transactionHash, hash);
         } else if (index == 0) {
             generateXML(index, 0, transactionHash, hash);
         }
@@ -54,6 +50,15 @@ public class Block {
         return previousHash;
     }
 
+    public int getHash() {
+        return hash;
+    }
+
+    public List<byte[]> getTransactions() {
+        return transactions;
+    }
+
+    //The files uploaded by the institution are hashed. The hashing process is initiated here.
     public String generateHash() {
         int transactionsSize = transactions.size();
         String hash;
@@ -71,6 +76,7 @@ public class Block {
         return hash;
     }
 
+    //computation of hash occurs in this method
     private byte[] generateHashInternal(byte[] message) {
         MessageDigest md;
         try {
@@ -85,14 +91,7 @@ public class Block {
         }
     }
 
-    public int getHash() {
-        return hash;
-    }
-
-    public List<byte[]> getTransactions() {
-        return transactions;
-    }
-
+    //The blockchain is stored in the form of an XML file. For the first block, this function is run to create and set up the XML.
     private void generateXML(int index, int previousHash, String transactionHash, int hash) {
         try {
             // Create a new XML document
@@ -110,7 +109,7 @@ public class Block {
 
             // add the index element
             Element indx = doc.createElement("index");
-            indx.appendChild(doc.createTextNode(indx.toString()));
+            indx.appendChild(doc.createTextNode(String.valueOf(index)));
             block.appendChild(indx);
 
             // add the previousHash element
@@ -145,51 +144,55 @@ public class Block {
         }
     }
 
-/*     //to be completed by Hemanth
-        private void addXMLNode(int index, int previousHash, String transactionHash, int hash) {
-        // read in the existing XML file
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = factory.newDocumentBuilder();
-        Document doc = builder.parse(new File("blockchain.xml"));
+    //For every other block that is added, this code ensure that the block is add to the XML tree.
+    private void addXMLNode(int index, int previousHash, String transactionHash, int hash) {
+        try {
+            // read the existing XML file into a DOM document
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document doc = builder.parse(new File("Server/blockchain.xml"));
 
-        // get the root element
-        Element root = doc.getDocumentElement();
+            // create the new block element
+            Element block2 = doc.createElement("block");
 
-        // create a new block element
-        Element block = doc.createElement("block");
+            // add the index element
+            Element index2 = doc.createElement("index");
+            index2.appendChild(doc.createTextNode(String.valueOf(index)));
+            block2.appendChild(index2);
 
-        // add the index element
-        Element indx = doc.createElement("index");
-        indx.appendChild(doc.createTextNode("2"));
-        block.appendChild(indx);
+            // add the previousHash element
+            Element previousHash2 = doc.createElement("previousHash");
+            previousHash2.appendChild(doc.createTextNode(String.valueOf(previousHash)));
+            block2.appendChild(previousHash2);
 
-        // add the previousHash element
-        Element prevHash = doc.createElement("previousHash");
-        prevHash.appendChild(doc.createTextNode("XYZ789"));
-        block.appendChild(prevHash);
+            // add the transaction element
+            Element transaction2 = doc.createElement("transaction");
+            transaction2.appendChild(doc.createTextNode(transactionHash));
+            block2.appendChild(transaction2);
 
-        // add the transaction element
-        Element transaction = doc.createElement("transaction");
-        transaction.appendChild(doc.createTextNode("50 BTC"));
-        block.appendChild(transaction);
+            // add the hash element
+            Element hash2 = doc.createElement("hash");
+            hash2.appendChild(doc.createTextNode(String.valueOf(hash)));
+            block2.appendChild(hash2);
 
-        // add the hash element
-        Element hasH = doc.createElement("hash");
-        hasH.appendChild(doc.createTextNode("GHI789"));
-        block.appendChild(hasH);
+            // append the new block element to the blockchain element
+            Element blockchain = doc.getDocumentElement();
+            blockchain.appendChild(block2);
 
-        // add the new block to the root element
-        root.appendChild(block);
+            // write the updated document back to the same file
+            TransformerFactory tf = TransformerFactory.newInstance();
+            Transformer transformer = tf.newTransformer();
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+            DOMSource source = new DOMSource(doc);
+            FileWriter writer = new FileWriter(new File("Server/blockchain.xml"));
+            StreamResult result = new StreamResult(writer);
+            transformer.transform(source, result);
+            System.out.println("XML file updated.");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();;
+        }
 
-        // write the updated document to a file
-        TransformerFactory tf = TransformerFactory.newInstance();
-        Transformer transformer = tf.newTransformer();
-        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-        transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
-        DOMSource source = new DOMSource(doc);
-        FileWriter writer = new FileWriter(new File("blockchain.xml"));
-        StreamResult result = new StreamResult(writer);
-        transformer.transform(source, result);
-        System.out.println("New block added to XML file.");
-    } */
+    }
 }

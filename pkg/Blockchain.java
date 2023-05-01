@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+//defines the operations on blockchain
 public class Blockchain {
     private static int currentIndex = 0;
     private List<Block> blocks;
