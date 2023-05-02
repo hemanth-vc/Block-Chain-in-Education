@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <blockchain>
-
+    
   <block>
+        
     <index>0</index>
+        
     <previousHash>0</previousHash>
+        
     <transaction>[B@69d0a921</transaction>
+        
     <hash>-1339486082</hash>
+      
   </block>
   
   <block>
     <index>1</index>
     <previousHash>-1339486082</previousHash>
-    <transaction>[B@769c9116;.;[B@6aceb1a5</transaction>
-    <hash>86666818</hash>
+    <transaction>[B@769c9116</transaction>
+    <hash>251036129</hash>
   </block>
-  
 </blockchain>

@@ -1,6 +1,5 @@
 import java.io.FileInputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -30,13 +29,13 @@ public class BlockchainDemo {
     private static void userInput() {
         try {
             Scanner scanner = new Scanner(System.in);
-            System.out.println("How many transactions do you want to make?");
+            System.out.println("How many certificates do you want to upload?");
             int n = scanner.nextInt();
             scanner.nextLine();
             String path;
             List<byte[]> listOfByteArrays = new ArrayList<>();
             for (int i = 0; i < n; i++) {
-                System.out.println("Enter the path of file no. " + i);
+                System.out.println("Enter the path of file no. " + (i+1));
                 path = scanner.nextLine();
                 paths.add(path);
                 try {
