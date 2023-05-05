@@ -62,27 +62,19 @@ public class Block {
     public String generateHash() {
         int transactionsSize = transactions.size();
         String hash;
-        if (transactionsSize == 1) {
+        if (transactionsSize > 0) {
             hash = generateHashInternal(transactions.get(0)).toString();
-        } else {
-            hash = generateHashInternal(transactions.get(0)).toString();
-            String temp = ";.;";
-            for (int i = 1; i < transactionsSize; i++) {
-                hash = hash + temp;
-                String temp1 = generateHashInternal(transactions.get(i)).toString();
-                hash = hash + temp1;
-            }
-        }
+        } 
+        else{hash ="";}
         return hash;
     }
 
     //computation of hash occurs in this method
-    private byte[] generateHashInternal(byte[] message) {
+    public static byte[] generateHashInternal(byte[] message) {
         MessageDigest md;
         try {
             md = MessageDigest.getInstance("SHA-1");
             byte[] hash = md.digest(message);
-            System.out.println("Hash of the message is: " + new String(hash));
             return hash;
         } catch (Exception e) {
             e.printStackTrace();
